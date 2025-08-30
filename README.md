@@ -1,34 +1,55 @@
 # xtools
-Android工具库
+Android自用工具库，实现的功能有：
+
+- [x] 使用Retrofit+RxJava封装网络请求
+- [ ] 进制转换工具
 
 
 
-## 使用
+### 集成步骤
 
-Step1.在项目根目录的`settings.gradle`添加
+**如何查看Gradle版本**
+
+- 在`项目根目录/gradle/wrapper/gradle-wrapper.properties`
+- 或者Ctrl+Alt+Shift+S打开Project Structure->Project->Gradle Version
+
+#### 配置远程仓库
+
+- Gradle Version < 7.0，在`build.gradle`添加
+
+  ```groovy
+  allprojects {
+      repositories {
+          // JitPack 远程仓库：https://jitpack.io
+          maven { url 'https://jitpack.io' }
+      }
+  }
+  ```
+
+- Gradle Version >= 7.0，在`settings.gradle`添加
+
+  ```groovy
+  dependencyResolutionManagement {
+      repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+      repositories {
+          mavenCentral()
+          // JitPack 远程仓库：https://jitpack.io
+          maven { url 'https://jitpack.io' }
+      }
+  }
+  ```
+
+#### 引入依赖
 
 ```groovy
-	dependencyResolutionManagement {
-		repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-		repositories {
-			mavenCentral()
-            // 添加此行
-			maven { url 'https://jitpack.io' }
-		}
-	}
-```
-
-Step2.引入jar包
-
-```groovy
-	dependencies {
-	        implementation 'com.github.renoly:xtools:1.0.1'
-	}
+dependencies {
+    implementation 'com.github.renoly:xtools:1.0.6'
+}
 ```
 
 
 
-## 网络库
+### 使用网络库
 
 1. 声明权限
 
@@ -37,7 +58,7 @@ Step2.引入jar包
 <uses-permission android:name="android.permission.INTERNET"/>
 ```
 
-2. 使用示例：
+2. Kotlin使用示例：
 
 ```kotlin
 val provider = RetrofitProvider(
@@ -67,8 +88,7 @@ api.getInfo()
       }
 
       override fun onError(error: NetworkResult.Error) {
-         // 这里会收到 success=false 的业务错误
-         // 可读取 error.code / error.message
+         // success=false 或者其他业务错误回调
          Log.e(TAG, "onError: ${error}")
       }
 

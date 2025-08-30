@@ -57,7 +57,7 @@ afterEvaluate {
             from components.findByName(variant.name)
             groupId = 'com.github.renoly'
             artifactId = 'xtools'
-            version = '1.0.0'
+            version = '1.0.6'
         }
     }
 }

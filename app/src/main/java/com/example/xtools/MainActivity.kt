@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         val tvView = findViewById<TextView>(R.id.tv_view)
 
         val provider = RetrofitProvider(
-            baseUrl = "http://192.168.3.13:4523/m1/6823482-6537445-default/", isDebug = true
+            baseUrl = "http://127.0.0.1:4523/m1/6823482-6537445-default/", isDebug = true
         )
         val api = provider.create(SampleApi::class.java)
 
