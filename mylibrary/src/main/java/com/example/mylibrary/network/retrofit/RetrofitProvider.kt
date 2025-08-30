@@ -10,12 +10,14 @@ import java.util.concurrent.TimeUnit
 
 class RetrofitProvider(
 	private val baseUrl: String,
-	private val isDebug: Boolean = false,
-	private val connectTimeoutSec: Long = 15,
-	private val readTimeoutSec: Long = 20,
-	private val writeTimeoutSec: Long = 20,
-	private val extraInterceptors: List<Interceptor> = emptyList()
+	private val isDebug: Boolean = false
 ) {
+
+	private val connectTimeoutSec: Long = 15
+	private val readTimeoutSec: Long = 20
+	private val writeTimeoutSec: Long = 20
+	private val extraInterceptors: List<Interceptor> = emptyList()
+
 
 	private val okHttpClient: OkHttpClient by lazy {
 		val builder = OkHttpClient.Builder()

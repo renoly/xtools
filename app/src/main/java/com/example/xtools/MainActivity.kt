@@ -13,6 +13,7 @@ import com.example.mylibrary.network.model.User
 import com.example.mylibrary.network.retrofit.RetrofitProvider
 import com.example.mylibrary.network.rx.apiResponseToNetworkResult
 import com.example.mylibrary.network.rx.applyIoToMainSchedulers
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlin.jvm.java
 
 class MainActivity : AppCompatActivity() {
@@ -27,6 +28,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         val tvView = findViewById<TextView>(R.id.tv_view)
+
+        AndroidSchedulers.mainThread()
 
         val provider = RetrofitProvider(
             baseUrl = "http://127.0.0.1:4523/m1/6823482-6537445-default/", isDebug = true

@@ -71,7 +71,7 @@ val api = provider.create(SampleApi::class.java)
 api.getInfo()
    .applyIoToMainSchedulers()
    .compose(apiResponseToNetworkResult())
-   .subscribe(object : BaseObserver<Info>() {
+   .subscribe(object : BaseObserver<User>() {
       override fun onStart() {
          Log.d(TAG, "onStart: ")
       }
@@ -80,11 +80,8 @@ api.getInfo()
          Log.d(TAG, "onLoading: ")
       }
 
-      override fun onSuccess(data: Info) {
+      override fun onSuccess(data: User) {
          Log.d(TAG, "onSuccess: ${data}")
-         runOnUiThread {
-            test.text = data.name
-         }
       }
 
       override fun onError(error: NetworkResult.Error) {
@@ -99,8 +96,50 @@ api.getInfo()
    })
 ```
 
+Java使用示例：
+
+```java
+RetrofitProvider provider = new RetrofitProvider(
+    "http://127.0.0.1:4523/m1/6823482-6537445-default/",
+    true
+);
+
+SampleApi api = provider.create(SampleApi.class);
+
+api.getUserInfo()
+    .subscribeOn(Schedulers.io())
+    .observeOn(AndroidSchedulers.mainThread())
+    .compose(apiResponseToNetworkResult())
+    .subscribe(new BaseObserver<User>() {
+        @Override
+        public void onStart() {
+        }
+
+        @Override
+        public void onLoading() {
+        }
+
+        @Override
+        public void onSuccess(User data) {
+        }
+
+        @Override
+        public void onError(NetworkResult.Error error) {
+            // success=false 或者其他业务错误回调
+        }
+
+        @Override
+        public void onFinish() {
+        }
+    });
+```
+
+
+
+
 
 网络接口会返回如下数据：
+
 ```json
 {
    "success": true,
