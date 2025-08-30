@@ -13,8 +13,6 @@ import com.example.mylibrary.network.model.User
 import com.example.mylibrary.network.retrofit.RetrofitProvider
 import com.example.mylibrary.network.rx.apiResponseToNetworkResult
 import com.example.mylibrary.network.rx.applyIoToMainSchedulers
-import okhttp3.internal.threadName
-import kotlin.concurrent.thread
 import kotlin.jvm.java
 
 class MainActivity : AppCompatActivity() {
