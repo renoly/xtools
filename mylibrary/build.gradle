@@ -28,6 +28,10 @@ android {
     kotlinOptions {
         jvmTarget = '11'
     }
+
+    configurations.all {
+        exclude group: 'com.intellij', module: 'annotations'
+    }
 }
 
 dependencies {
