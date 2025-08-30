@@ -2,6 +2,7 @@ package com.example.xtools
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -12,6 +13,8 @@ import com.example.mylibrary.network.model.User
 import com.example.mylibrary.network.retrofit.RetrofitProvider
 import com.example.mylibrary.network.rx.apiResponseToNetworkResult
 import com.example.mylibrary.network.rx.applyIoToMainSchedulers
+import okhttp3.internal.threadName
+import kotlin.concurrent.thread
 import kotlin.jvm.java
 
 class MainActivity : AppCompatActivity() {
@@ -25,6 +28,7 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        val tvView = findViewById<TextView>(R.id.tv_view)
 
         val provider = RetrofitProvider(
             baseUrl = "http://192.168.3.13:4523/m1/6823482-6537445-default/", isDebug = true
@@ -42,12 +46,13 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onSuccess(data: User) {
-                    Log.d(TAG, "onSuccess: ${data}")
+                    Log.d(TAG, "${Thread.currentThread().name}=======onSuccess: ${data}")
+                    tvView.text = data.toString()
                 }
 
                 override fun onError(error: NetworkResult.Error) {
                     // success=false 或者其他业务错误回调
-                    Log.e(TAG, "onError: ${error}")
+                    Log.e(TAG, "${Thread.currentThread().name}=======onError: ${error}")
                 }
 
                 override fun onFinish() {
