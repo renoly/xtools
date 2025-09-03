@@ -43,7 +43,7 @@ Android自用工具库，实现的功能有：
 
 ```groovy
 dependencies {
-    implementation 'com.github.renoly:xtools:1.0.6'
+    implementation 'com.github.renoly:xtools:1.0.0'
 }
 ```
 
@@ -51,36 +51,33 @@ dependencies {
 
 ### 使用网络库
 
-1. 声明权限
+###### 调用getInfo接口
+
+声明权限
 
 
 ```xml
 <uses-permission android:name="android.permission.INTERNET"/>
 ```
 
-2. Kotlin使用示例：
+Kotlin使用示例：
 
 ```kotlin
 val provider = RetrofitProvider(
-   baseUrl = "http://127.0.0.1:4523/m1/6823482-6537445-default/",
-   isDebug = true
+    "http://127.0.0.1:4523/m1/6823482-6537445-default/", true
 )
 val api = provider.create(SampleApi::class.java)
 
-
-api.getInfo()
-   .applyIoToMainSchedulers()
-   .compose(apiResponseToNetworkResult())
+api.getInfo<User>().applyIoToMainSchedulers().compose(apiResponseToNetworkResult())
    .subscribe(object : BaseObserver<User>() {
       override fun onStart() {
-         Log.d(TAG, "onStart: ")
       }
 
       override fun onLoading() {
-         Log.d(TAG, "onLoading: ")
       }
 
       override fun onSuccess(data: User) {
+         // success=true且业务回调正确
          Log.d(TAG, "onSuccess: ${data}")
       }
 
@@ -90,9 +87,7 @@ api.getInfo()
       }
 
       override fun onFinish() {
-         Log.d(TAG, "onFinish: ")
       }
-
    })
 ```
 
@@ -100,52 +95,55 @@ Java使用示例：
 
 ```java
 RetrofitProvider provider = new RetrofitProvider(
-    "http://127.0.0.1:4523/m1/6823482-6537445-default/",
-    true
+        "http://127.0.0.1:4523/m1/6823482-6537445-default/",
+        true
 );
-
 SampleApi api = provider.create(SampleApi.class);
 
-api.getUserInfo()
-    .subscribeOn(Schedulers.io())
-    .observeOn(AndroidSchedulers.mainThread())
-    .compose(apiResponseToNetworkResult())
-    .subscribe(new BaseObserver<User>() {
-        @Override
-        public void onStart() {
-        }
+api.<User>getInfo()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(apiResponseToNetworkResult())
+        .subscribe(new BaseObserver<User>() {
+            @Override
+            public void onStart() {
+            }
 
-        @Override
-        public void onLoading() {
-        }
+            @Override
+            public void onLoading() {
+            }
 
-        @Override
-        public void onSuccess(User data) {
-        }
+            @Override
+            public void onSuccess(User data) {
+                Log.d(TAG, "onSuccess: " + data);
+            }
 
-        @Override
-        public void onError(NetworkResult.Error error) {
-            // success=false 或者其他业务错误回调
-        }
+            @Override
+            public void onError(NetworkResult.Error error) {
+                Log.e(TAG, "onError: " + error);
+            }
 
-        @Override
-        public void onFinish() {
-        }
-    });
+            @Override
+            public void onFinish() {
+            }
+        });
 ```
 
 
 
-
-
-网络接口会返回如下数据：
+接口数据结构：
 
 ```json
 {
    "success": true,
    "code": 0,
    "message": "ok",
-   "data": "aaaa"
+   "data": {
+      "id": 1,
+      "name": "jake",
+      "age": 18,
+      "desc": "he likes to eat vegetables"
+   }
 }
 ```
 

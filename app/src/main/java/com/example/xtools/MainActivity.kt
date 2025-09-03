@@ -29,14 +29,12 @@ class MainActivity : AppCompatActivity() {
 
         val tvView = findViewById<TextView>(R.id.tv_view)
 
-        AndroidSchedulers.mainThread()
-
         val provider = RetrofitProvider(
-            baseUrl = "http://127.0.0.1:4523/m1/6823482-6537445-default/", isDebug = true
+            "http://127.0.0.1:4523/m1/6823482-6537445-default/", true
         )
         val api = provider.create(SampleApi::class.java)
 
-        api.getUserInfo().applyIoToMainSchedulers().compose(apiResponseToNetworkResult())
+        api.getInfo<User>().applyIoToMainSchedulers().compose(apiResponseToNetworkResult())
             .subscribe(object : BaseObserver<User>() {
                 override fun onStart() {
                     Log.d(TAG, "onStart: ")
@@ -59,7 +57,6 @@ class MainActivity : AppCompatActivity() {
                 override fun onFinish() {
                     Log.d(TAG, "onFinish: ")
                 }
-
             })
 
     }
