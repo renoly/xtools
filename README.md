@@ -64,69 +64,31 @@ Kotlin使用示例：
 
 ```kotlin
 val provider = RetrofitProvider(
-    "http://127.0.0.1:4523/m1/6823482-6537445-default/", true
+    "http://192.168.3.167:4523/m1/6823482-6537445-default/", true
 )
 val api = provider.create(SampleApi::class.java)
 
-api.getInfo<User>().applyIoToMainSchedulers().compose(apiResponseToNetworkResult())
-   .subscribe(object : BaseObserver<User>() {
-      override fun onStart() {
-      }
+api.getInfo1<User>()
+.doOnNext { r -> Log.d(TAG, "resp: success=${r.success}, code=${r.code}, msg=${r.message}, data=${r.data}") }
+.applyIoToMainSchedulers().compose(apiResponseToNetworkResult())
+.subscribe(object : BaseObserver<User>() {
+    override fun onStart() {
+    }
 
-      override fun onLoading() {
-      }
+    override fun onLoading() {
+    }
 
-      override fun onSuccess(data: User) {
-         // success=true且业务回调正确
-         Log.d(TAG, "onSuccess: ${data}")
-      }
+    override fun onSuccess(data: User) {
+    }
 
-      override fun onError(error: NetworkResult.Error) {
-         // success=false 或者其他业务错误回调
-         Log.e(TAG, "onError: ${error}")
-      }
+    override fun onError(error: NetworkResult.Error) {
+        // success=false 或者其他业务错误回调
+    }
 
-      override fun onFinish() {
-      }
-   })
-```
+    override fun onFinish() {
 
-Java使用示例：
-
-```java
-RetrofitProvider provider = new RetrofitProvider(
-        "http://127.0.0.1:4523/m1/6823482-6537445-default/",
-        true
-);
-SampleApi api = provider.create(SampleApi.class);
-
-api.<User>getInfo()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(apiResponseToNetworkResult())
-        .subscribe(new BaseObserver<User>() {
-            @Override
-            public void onStart() {
-            }
-
-            @Override
-            public void onLoading() {
-            }
-
-            @Override
-            public void onSuccess(User data) {
-                Log.d(TAG, "onSuccess: " + data);
-            }
-
-            @Override
-            public void onError(NetworkResult.Error error) {
-                Log.e(TAG, "onError: " + error);
-            }
-
-            @Override
-            public void onFinish() {
-            }
-        });
+    }
+})
 ```
 
 

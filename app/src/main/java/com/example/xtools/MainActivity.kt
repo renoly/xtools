@@ -9,12 +9,11 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.mylibrary.network.BaseObserver
 import com.example.mylibrary.network.SampleApi
 import com.example.mylibrary.network.core.NetworkResult
+import com.example.mylibrary.network.getInfo1
 import com.example.mylibrary.network.model.User
 import com.example.mylibrary.network.retrofit.RetrofitProvider
 import com.example.mylibrary.network.rx.apiResponseToNetworkResult
 import com.example.mylibrary.network.rx.applyIoToMainSchedulers
-import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlin.jvm.java
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
@@ -30,11 +29,13 @@ class MainActivity : AppCompatActivity() {
         val tvView = findViewById<TextView>(R.id.tv_view)
 
         val provider = RetrofitProvider(
-            "http://127.0.0.1:4523/m1/6823482-6537445-default/", true
+            "http://192.168.3.167:4523/m1/6823482-6537445-default/", true
         )
         val api = provider.create(SampleApi::class.java)
 
-        api.getInfo<User>().applyIoToMainSchedulers().compose(apiResponseToNetworkResult())
+        api.getInfo1<User>()
+            .doOnNext { r -> Log.d(TAG, "resp: success=${r.success}, code=${r.code}, msg=${r.message}, data=${r.data}") }
+            .applyIoToMainSchedulers().compose(apiResponseToNetworkResult())
             .subscribe(object : BaseObserver<User>() {
                 override fun onStart() {
                     Log.d(TAG, "onStart: ")
